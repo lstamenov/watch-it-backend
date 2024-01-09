@@ -1,13 +1,6 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import {
-  dbType,
-  dbHost,
-  dbPort,
-  dbUsername,
-  dbPassword,
-  dbName,
-} from '../config';
+import { dbType, dbHost, dbPort, dbUsername, dbPassword, dbName } from '../config';
 import { User } from '../entities';
 
 const databaseConfig: TypeOrmModule = {
