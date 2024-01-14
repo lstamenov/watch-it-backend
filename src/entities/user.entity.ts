@@ -13,6 +13,9 @@ class User extends BaseEntity {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  avatarURL: string;
+
   @Column({ default: null })
   accountActivationToken: string;
 

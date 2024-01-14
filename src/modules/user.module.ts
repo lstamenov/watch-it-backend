@@ -16,6 +16,12 @@ import HashService from 'src/services/hash.service';
 })
 export default class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthenticationMiddleware).forRoutes({ path: '/users/authenticate', method: RequestMethod.GET });
+    consumer
+      .apply(AuthenticationMiddleware)
+      .forRoutes(
+        { path: '/users/authenticate', method: RequestMethod.GET },
+        { path: '/users/avatar', method: RequestMethod.PUT },
+        { path: '/users/password', method: RequestMethod.PUT },
+      );
   }
 }
