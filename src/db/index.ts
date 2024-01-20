@@ -1,7 +1,7 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { dbType, dbHost, dbPort, dbUsername, dbPassword, dbName } from '../config';
-import { User } from '../entities';
+import { Movie, Show, User } from '../entities';
 
 const databaseConfig: TypeOrmModule = {
   type: dbType,
@@ -10,7 +10,7 @@ const databaseConfig: TypeOrmModule = {
   username: dbUsername,
   password: dbPassword,
   database: dbName,
-  entities: [User],
+  entities: [User, Movie, Show],
   synchronize: true,
 };
 
