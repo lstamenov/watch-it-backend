@@ -8,4 +8,20 @@ interface Response extends ResponseT {}
 
 interface Next extends NextFunction {}
 
-export { Request, Response, Next };
+interface RequestOptions {
+  path: string;
+  queryParams?: Record<string, string>;
+  body?: Record<string, unknown>;
+}
+
+enum HttpMethods {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE',
+  OPTIONS = 'OPTIONS',
+  HEAD = 'HEAD',
+}
+
+export { Request, Response, Next, RequestOptions, HttpMethods };
