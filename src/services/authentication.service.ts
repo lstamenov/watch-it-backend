@@ -26,7 +26,7 @@ class AuthenticationService {
   }
 
   public generateToken(userId: number) {
-    return this.jwtService.sign({ userId }, { secret: this.secret });
+    return this.jwtService.sign({ userId }, { secret: this.secret, expiresIn: this.expirationTime });
   }
 
   public verifyToken(headers: IncomingHttpHeaders): { userId: number } {

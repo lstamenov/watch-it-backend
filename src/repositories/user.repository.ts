@@ -5,7 +5,7 @@ import { User } from '../entities';
 
 @Injectable()
 class UserRepository extends Repository<User> {
-  constructor(private dataSource: DataSource) {
+  constructor(dataSource: DataSource) {
     super(User, dataSource.createEntityManager());
   }
 }
