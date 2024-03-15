@@ -20,7 +20,6 @@ class MovieController {
 
       return res.status(HttpStatus.OK).send(movie);
     } catch (e) {
-      console.log(e);
       return res.status(HttpStatus.NOT_FOUND).send(e?.message);
     }
   }
