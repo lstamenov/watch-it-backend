@@ -35,6 +35,18 @@ class MovieController {
       return res.status(HttpStatus.NOT_FOUND).send(e?.message);
     }
   }
+
+  @Get('/top-rated')
+  public async getTopRatedMovies(@Req() req: Request, @Res() res: Response) {
+    try {
+      const language: string = req.query.language.toString();
+      const movies: Movie[] = await this.movieService.getTopRatedMovies(language);
+
+      return res.status(HttpStatus.OK).send(movies);
+    } catch (e) {
+      return res.status(HttpStatus.NOT_FOUND).send(e?.message);
+    }
+  }
 }
 
 export default MovieController;
