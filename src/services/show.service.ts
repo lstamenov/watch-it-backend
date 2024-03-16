@@ -34,6 +34,14 @@ class ShowService extends FetchService {
 
     return this.getFullDetailedShows(popularShowsResponse.results, language);
   }
+
+  public async getTopRatedShows(language: string): Promise<Show[]> {
+    const path: string = `${this.basePath}/popular`;
+    const queryParams = { language };
+    const topRatedShowsResponse = await this.get<ShowsApiReponse>({ path, queryParams });
+
+    return this.getFullDetailedShows(topRatedShowsResponse.results, language);
+  }
 }
 
 export default ShowService;
