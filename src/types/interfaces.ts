@@ -1,5 +1,6 @@
 import { Request as RequestT, Response as ResponseT, NextFunction } from 'express';
 import { Movie, Show } from 'src/entities';
+import TrendingMedia from 'src/entities/trending.media.entity';
 
 interface Request extends RequestT {
   user: { userId: number };
@@ -23,6 +24,11 @@ interface ShowsApiReponse {
   results: Show[];
 }
 
+interface TrendingMediaApiResponse {
+  results: TrendingMedia[];
+  page: number;
+}
+
 enum HttpMethods {
   GET = 'GET',
   POST = 'POST',
@@ -33,4 +39,13 @@ enum HttpMethods {
   HEAD = 'HEAD',
 }
 
-export { Request, Response, Next, RequestOptions, HttpMethods, MoviesApiReponse, ShowsApiReponse };
+export {
+  Request,
+  Response,
+  Next,
+  RequestOptions,
+  HttpMethods,
+  MoviesApiReponse,
+  ShowsApiReponse,
+  TrendingMediaApiResponse,
+};
