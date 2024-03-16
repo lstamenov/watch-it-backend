@@ -29,7 +29,7 @@ class TrendingMediaService extends FetchService {
   }
 
   public async getTrendingMedia(language: string, page: number): Promise<(Movie | Show)[]> {
-    const path: string = `${this.basePath}/all`;
+    const path: string = `${this.basePath}/all/week`;
     const queryParams = { language, page: page.toString() };
     const trendingMediaResponse: TrendingMediaApiResponse = await this.get<TrendingMediaApiResponse>({
       path,
