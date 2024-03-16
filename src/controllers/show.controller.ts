@@ -11,7 +11,7 @@ class ShowController {
     this.showService = showService;
   }
 
-  @Get('/:id')
+  @Get('/show/:id')
   public async getShow(@Req() req: Request, @Res() res: Response) {
     try {
       const id: number = Number(req.params.id);
@@ -19,6 +19,18 @@ class ShowController {
       const show: Show = await this.showService.getShowById(id, language);
 
       return res.status(HttpStatus.OK).send(show);
+    } catch (e) {
+      return res.status(HttpStatus.NOT_FOUND).send(e?.message);
+    }
+  }
+
+  @Get('/popular')
+  public async getPopularShows(@Req() req: Request, @Res() res: Response) {
+    try {
+      const language: string = req.query.language.toString();
+      const shows: Show[] = await this.showService.getPopularShows(language);
+
+      return res.status(HttpStatus.OK).send(shows);
     } catch (e) {
       return res.status(HttpStatus.NOT_FOUND).send(e?.message);
     }

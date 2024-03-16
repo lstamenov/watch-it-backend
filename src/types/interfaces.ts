@@ -1,5 +1,5 @@
 import { Request as RequestT, Response as ResponseT, NextFunction } from 'express';
-import { Movie } from 'src/entities';
+import { Movie, Show } from 'src/entities';
 
 interface Request extends RequestT {
   user: { userId: number };
@@ -19,6 +19,10 @@ interface MoviesApiReponse {
   results: Movie[];
 }
 
+interface ShowsApiReponse {
+  results: Show[];
+}
+
 enum HttpMethods {
   GET = 'GET',
   POST = 'POST',
@@ -29,4 +33,4 @@ enum HttpMethods {
   HEAD = 'HEAD',
 }
 
-export { Request, Response, Next, RequestOptions, HttpMethods, MoviesApiReponse };
+export { Request, Response, Next, RequestOptions, HttpMethods, MoviesApiReponse, ShowsApiReponse };
