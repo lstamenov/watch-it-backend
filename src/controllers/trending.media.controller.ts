@@ -23,6 +23,19 @@ class TrendingMediaController {
       return res.status(HttpStatus.NOT_FOUND).send(e);
     }
   }
+
+  @Get('/movies')
+  public async getTrendingMovies(@Req() req: Request, @Res() res: Response) {
+    try {
+      const page: number = Number(req.query.page);
+      const language: string = req.query.language.toString();
+      const trendingMovies: (Movie | Show)[] = await this.trendingMediaService.getTrendingMovies(language, page);
+
+      return res.status(HttpStatus.OK).send(trendingMovies);
+    } catch (e) {
+      return res.status(HttpStatus.NOT_FOUND).send(e);
+    }
+  }
 }
 
 export default TrendingMediaController;
