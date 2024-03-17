@@ -55,6 +55,20 @@ class TrendingMediaService extends FetchService {
 
     return Promise.all(fullDetailedMovies);
   }
+
+  public async getTrendingShows(language: string, page: number): Promise<(Movie | Show)[]> {
+    const path: string = `${this.basePath}/tv/week`;
+    const queryParams = { language, page: page.toString() };
+    const trendingShowsResponse: TrendingMediaApiResponse = await this.get<TrendingMediaApiResponse>({
+      path,
+      queryParams,
+    });
+    const fullDetailedShows: Promise<Movie | Show>[] = trendingShowsResponse.results.map((media) =>
+      this.getFullDetailedMedia(media, language),
+    );
+
+    return Promise.all(fullDetailedShows);
+  }
 }
 
 export default TrendingMediaService;
