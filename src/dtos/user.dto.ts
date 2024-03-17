@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 class UserDto {
   @IsString()
@@ -29,6 +29,11 @@ class UpdateUserPassword {
   newPassword: string;
 }
 
-export { UpdateUserAvatar, UpdateUserPassword };
+class UpdateFavouriteShows {
+  @IsNumber()
+  showId: number;
+}
+
+export { UpdateUserAvatar, UpdateUserPassword, UpdateFavouriteShows };
 
 export default UserDto;

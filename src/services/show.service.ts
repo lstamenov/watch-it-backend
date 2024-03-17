@@ -3,14 +3,17 @@ import FetchService from './fetch.service';
 import { Show } from 'src/entities';
 import { showUrl } from 'src/config';
 import { ShowsApiReponse } from 'src/types/interfaces';
+import ShowRepository from 'src/repositories/show.repository';
 
 @Injectable()
 class ShowService extends FetchService {
   private basePath: string;
+  private showRepository: ShowRepository;
 
-  constructor() {
+  constructor(showRepository: ShowRepository) {
     super();
     this.basePath = showUrl;
+    this.showRepository = showRepository;
   }
 
   public getShowById(id: number, language: string): Promise<Show> {
@@ -18,6 +21,18 @@ class ShowService extends FetchService {
     const queryParams = { language };
 
     return this.get({ path, queryParams });
+  }
+
+  public async getShowFromDB(showId: number): Promise<Show> {
+    try {
+      const show: Show = await this.showRepository.findOneByOrFail({ id: showId });
+      return show;
+    } catch (_e) {
+      const apiShow: Show = await this.getShowById(showId, 'en');
+      console.log('################', apiShow);
+      const show: Show = await this.showRepository.save(apiShow);
+      return show;
+    }
   }
 
   public async getFullDetailedShows(content: Show[], language: string): Promise<Show[]> {

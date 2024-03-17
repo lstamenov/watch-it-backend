@@ -1,6 +1,7 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, ManyToMany, JoinTable } from 'typeorm';
 
 import BaseEntity from './base.entity';
+import Show from './show.entity';
 
 @Entity({ name: 'users' })
 class User extends BaseEntity {
@@ -21,6 +22,10 @@ class User extends BaseEntity {
 
   @Column({ default: null })
   resetPasswordToken: string;
+
+  @ManyToMany(() => Show)
+  @JoinTable()
+  favouriteShows: Show[];
 }
 
 export default User;
