@@ -22,7 +22,7 @@ abstract class BaseMedia {
   @Column()
   overview: string;
 
-  @Column()
+  @Column({ nullable: true })
   media_type: string;
 }
 

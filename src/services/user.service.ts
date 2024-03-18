@@ -102,11 +102,12 @@ class UserService {
 
     const isShowAlreadyAdded: boolean = !!user.favouriteShows.find(({ id }) => id === showId);
 
-    if (isShowAlreadyAdded) {
+    if (!isShowAlreadyAdded) {
       return;
     }
 
     user.favouriteShows = user.favouriteShows.filter(({ id }) => id !== showId);
+
     this.userRepository.save(user);
   }
 }

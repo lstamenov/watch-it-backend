@@ -16,11 +16,21 @@ class ShowService extends FetchService {
     this.showRepository = showRepository;
   }
 
-  public getShowById(id: number, language: string): Promise<Show> {
+  private async getExternalLinks(id: number): Promise<string> {
+    const path: string = `${this.basePath}/${id}/external_ids`;
+    const externalIds = await this.get<{ imdb_id: string }>({ path });
+
+    return externalIds.imdb_id;
+  }
+
+  public async getShowById(id: number, language: string): Promise<Show> {
     const path: string = `${this.basePath}/${id}`;
     const queryParams = { language };
+    const show: Show = await this.get({ path, queryParams });
+    const imdbId = await this.getExternalLinks(id);
+    show.imdb_id = imdbId;
 
-    return this.get({ path, queryParams });
+    return show;
   }
 
   public async getShowFromDB(showId: number): Promise<Show> {
@@ -29,7 +39,6 @@ class ShowService extends FetchService {
       return show;
     } catch (_e) {
       const apiShow: Show = await this.getShowById(showId, 'en');
-      console.log('################', apiShow);
       const show: Show = await this.showRepository.save(apiShow);
       return show;
     }
@@ -51,7 +60,7 @@ class ShowService extends FetchService {
   }
 
   public async getTopRatedShows(language: string): Promise<Show[]> {
-    const path: string = `${this.basePath}/popular`;
+    const path: string = `${this.basePath}/top-rated`;
     const queryParams = { language };
     const topRatedShowsResponse = await this.get<ShowsApiReponse>({ path, queryParams });
 
