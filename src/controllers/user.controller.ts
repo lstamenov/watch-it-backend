@@ -1,9 +1,22 @@
-import { Body, Controller, Get, HttpStatus, Post, Put, Req, Res, UseGuards, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Post,
+  Put,
+  Req,
+  Res,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import UserService from '../services/user.service';
 import AuthenticationGuard from 'src/guards/authentication.guard';
-import UserDto, { UpdateUserAvatar, UpdateUserPassword } from 'src/dtos/user.dto';
+import UserDto, { UpdateFavouriteShows, UpdateUserAvatar, UpdateUserPassword } from 'src/dtos/user.dto';
 import { CredentialsInUseError, InvalidCredentialsError } from 'src/errors';
 import { Request, Response } from 'src/types/interfaces';
+import AppError from 'src/errors/app.error';
 
 @Controller({ path: '/users' })
 class UserController {
@@ -77,6 +90,46 @@ class UserController {
       return res.status(HttpStatus.OK).send();
     } catch (e) {
       return res.status(HttpStatus.BAD_REQUEST).send();
+    }
+  }
+
+  @Put('/favourites/shows')
+  @UseGuards(AuthenticationGuard)
+  public async addShowToFavourites(
+    @Body(new ValidationPipe()) body: UpdateFavouriteShows,
+    @Req() request: Request,
+    @Res() res: Response,
+  ) {
+    try {
+      const {
+        user: { userId },
+      } = request;
+      const { showId } = body;
+
+      await this.userService.addShowToFavourites(userId, showId);
+
+      return res.status(200).send();
+    } catch (e) {
+      const { message, statusCode } = e as AppError;
+      return res.status(statusCode).send({ message });
+    }
+  }
+
+  @Delete('/favourites/shows/:id')
+  @UseGuards(AuthenticationGuard)
+  public async removeShowFromFavourites(@Req() request: Request, @Res() res: Response) {
+    try {
+      const {
+        user: { userId },
+      } = request;
+      const showId = Number(request.params.id);
+
+      await this.userService.removeShowFromFavourites(userId, showId);
+
+      return res.status(200).send();
+    } catch (e) {
+      const { message, statusCode } = e as AppError;
+      return res.status(statusCode).send({ message });
     }
   }
 }

@@ -13,4 +13,16 @@ class InvalidCredentialsError extends AppError {
   }
 }
 
-export { CredentialsInUseError, InvalidCredentialsError };
+class UserNotFoundError extends AppError {
+  constructor() {
+    super('User not found', HttpStatus.NOT_FOUND);
+  }
+}
+
+class ShowNotFoundError extends AppError {
+  constructor() {
+    super('Show not found', HttpStatus.NOT_FOUND);
+  }
+}
+
+export { CredentialsInUseError, InvalidCredentialsError, UserNotFoundError, ShowNotFoundError };

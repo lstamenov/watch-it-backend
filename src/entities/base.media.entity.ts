@@ -10,7 +10,7 @@ abstract class BaseMedia {
   @Column()
   original_language: string;
 
-  @Column()
+  @Column({ type: 'decimal' })
   vote_average: number;
 
   @Column()
@@ -22,7 +22,7 @@ abstract class BaseMedia {
   @Column()
   overview: string;
 
-  @Column()
+  @Column({ nullable: true })
   media_type: string;
 }
 
