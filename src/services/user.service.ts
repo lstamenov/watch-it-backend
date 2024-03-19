@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import UserDto, { UpdateUserPassword } from 'src/dtos/user.dto';
-import { Show, User } from 'src/entities';
+import { Movie, Show, User } from 'src/entities';
 import UserRepository from 'src/repositories/user.repository';
 import HashService from './hash.service';
 import AuthenticationService from './authentication.service';
 import ShowService from './show.service';
-import { ShowNotFoundError, UserNotFoundError } from 'src/errors';
+import { MovieNotFoundError, ShowNotFoundError, UserNotFoundError } from 'src/errors';
+import MovieService from './movie.service';
 
 @Injectable()
 class UserService {
@@ -13,17 +14,20 @@ class UserService {
   private hashService: HashService;
   private authenticationService: AuthenticationService;
   private showService: ShowService;
+  private movieService: MovieService;
 
   constructor(
     userRepository: UserRepository,
     hashService: HashService,
     authenticationService: AuthenticationService,
     showService: ShowService,
+    movieService: MovieService,
   ) {
     this.userRepository = userRepository;
     this.hashService = hashService;
     this.authenticationService = authenticationService;
     this.showService = showService;
+    this.movieService = movieService;
   }
 
   public async getUserById(userId: number): Promise<User> {
@@ -107,6 +111,46 @@ class UserService {
     }
 
     user.favouriteShows = user.favouriteShows.filter(({ id }) => id !== showId);
+
+    this.userRepository.save(user);
+  }
+
+  public async addMovieToFavourites(userId: number, movieId: number): Promise<void> {
+    const user: User = await this.userRepository.findOne({ where: { id: userId }, relations: ['favouriteMovies'] });
+    const movie: Movie = await this.movieService.getMovieFromDB(movieId);
+
+    if (!user) {
+      throw new UserNotFoundError();
+    }
+
+    if (!movie) {
+      throw new MovieNotFoundError();
+    }
+
+    const isMovieAlreadyAdded: boolean = !!user.favouriteMovies.find(({ id }) => id === movieId);
+
+    if (isMovieAlreadyAdded) {
+      return;
+    }
+
+    user.favouriteMovies.push(movie);
+    this.userRepository.save(user);
+  }
+
+  public async removeMovieFromFavourites(userId: number, showId: number): Promise<void> {
+    const user: User = await this.userRepository.findOne({ where: { id: userId }, relations: ['favouriteMovies'] });
+
+    if (!user) {
+      throw new UserNotFoundError();
+    }
+
+    const isMovieAlreadyAdded: boolean = !!user.favouriteMovies.find(({ id }) => id === showId);
+
+    if (!isMovieAlreadyAdded) {
+      return;
+    }
+
+    user.favouriteMovies = user.favouriteMovies.filter(({ id }) => id !== showId);
 
     this.userRepository.save(user);
   }

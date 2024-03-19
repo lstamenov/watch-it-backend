@@ -29,11 +29,11 @@ class UpdateUserPassword {
   newPassword: string;
 }
 
-class UpdateFavouriteShows {
+class UpdateFavourites {
   @IsNumber()
-  showId: number;
+  id: number;
 }
 
-export { UpdateUserAvatar, UpdateUserPassword, UpdateFavouriteShows };
+export { UpdateUserAvatar, UpdateUserPassword, UpdateFavourites };
 
 export default UserDto;

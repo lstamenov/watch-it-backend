@@ -25,4 +25,10 @@ class ShowNotFoundError extends AppError {
   }
 }
 
-export { CredentialsInUseError, InvalidCredentialsError, UserNotFoundError, ShowNotFoundError };
+class MovieNotFoundError extends AppError {
+  constructor() {
+    super('Movie not found', HttpStatus.NOT_FOUND);
+  }
+}
+
+export { CredentialsInUseError, InvalidCredentialsError, UserNotFoundError, ShowNotFoundError, MovieNotFoundError };

@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import TrendingMediaController from 'src/controllers/trending.media.controller';
 import TrendingMedia from 'src/entities/trending.media.entity';
-import MovieService from 'src/services/movie.service';
 import TrendingMediaService from 'src/services/trending.media.service';
 import ShowModule from './show.module';
+import MovieModule from './movie.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TrendingMedia]), ShowModule],
+  imports: [TypeOrmModule.forFeature([TrendingMedia]), ShowModule, MovieModule],
   controllers: [TrendingMediaController],
-  providers: [MovieService, TrendingMediaService],
+  providers: [TrendingMediaService],
 })
 export default class TrendingMediaModule {}
