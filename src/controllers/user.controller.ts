@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import UserService from '../services/user.service';
 import AuthenticationGuard from 'src/guards/authentication.guard';
-import UserDto, { UpdateFavouriteShows, UpdateUserAvatar, UpdateUserPassword } from 'src/dtos/user.dto';
+import UserDto, { UpdateFavourites, UpdateUserAvatar, UpdateUserPassword } from 'src/dtos/user.dto';
 import { CredentialsInUseError, InvalidCredentialsError } from 'src/errors';
 import { Request, Response } from 'src/types/interfaces';
 import AppError from 'src/errors/app.error';
@@ -96,7 +96,7 @@ class UserController {
   @Put('/favourites/shows')
   @UseGuards(AuthenticationGuard)
   public async addShowToFavourites(
-    @Body(new ValidationPipe()) body: UpdateFavouriteShows,
+    @Body(new ValidationPipe()) body: UpdateFavourites,
     @Req() request: Request,
     @Res() res: Response,
   ) {
@@ -104,9 +104,9 @@ class UserController {
       const {
         user: { userId },
       } = request;
-      const { showId } = body;
+      const { id } = body;
 
-      await this.userService.addShowToFavourites(userId, showId);
+      await this.userService.addShowToFavourites(userId, id);
 
       return res.status(200).send();
     } catch (e) {
@@ -125,6 +125,46 @@ class UserController {
       const showId = Number(request.params.id);
 
       await this.userService.removeShowFromFavourites(userId, showId);
+
+      return res.status(200).send();
+    } catch (e) {
+      const { message, statusCode } = e as AppError;
+      return res.status(statusCode).send({ message });
+    }
+  }
+
+  @Put('/favourites/movies')
+  @UseGuards(AuthenticationGuard)
+  public async addMovieToFavourites(
+    @Body(new ValidationPipe()) body: UpdateFavourites,
+    @Req() request: Request,
+    @Res() res: Response,
+  ) {
+    try {
+      const {
+        user: { userId },
+      } = request;
+      const { id } = body;
+
+      await this.userService.addMovieToFavourites(userId, id);
+
+      return res.status(200).send();
+    } catch (e) {
+      const { message, statusCode } = e as AppError;
+      return res.status(statusCode).send({ message });
+    }
+  }
+
+  @Delete('/favourites/movies/:id')
+  @UseGuards(AuthenticationGuard)
+  public async removeMovieFromFavourites(@Req() request: Request, @Res() res: Response) {
+    try {
+      const {
+        user: { userId },
+      } = request;
+      const movieId = Number(request.params.id);
+
+      await this.userService.removeMovieFromFavourites(userId, movieId);
 
       return res.status(200).send();
     } catch (e) {

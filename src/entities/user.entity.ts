@@ -2,6 +2,7 @@ import { Entity, Column, ManyToMany, JoinTable } from 'typeorm';
 
 import BaseEntity from './base.entity';
 import Show from './show.entity';
+import Movie from './movie.entity';
 
 @Entity({ name: 'users' })
 class User extends BaseEntity {
@@ -26,6 +27,10 @@ class User extends BaseEntity {
   @ManyToMany(() => Show)
   @JoinTable()
   favouriteShows: Show[];
+
+  @ManyToMany(() => Movie)
+  @JoinTable()
+  favouriteMovies: Movie[];
 }
 
 export default User;

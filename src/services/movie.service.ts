@@ -3,21 +3,45 @@ import FetchService from './fetch.service';
 import { Movie } from 'src/entities';
 import { movieUrl } from 'src/config';
 import { MoviesApiReponse } from 'src/types/interfaces';
+import MovieRepository from 'src/repositories/movie.repository';
 
 @Injectable()
 class MovieService extends FetchService {
   private basePath: string;
+  private movieRepository: MovieRepository;
 
-  constructor() {
+  constructor(movieRepository: MovieRepository) {
     super();
     this.basePath = movieUrl;
+    this.movieRepository = movieRepository;
   }
 
-  public getMovieById(id: number, language: string): Promise<Movie> {
+  private async getExternalLinks(id: number): Promise<string> {
+    const path: string = `${this.basePath}/${id}/external_ids`;
+    const externalIds = await this.get<{ imdb_id: string }>({ path });
+
+    return externalIds.imdb_id;
+  }
+
+  public async getMovieById(id: number, language: string): Promise<Movie> {
     const path: string = `${this.basePath}/${id}`;
     const queryParams = { language };
+    const movie: Movie = await this.get({ path, queryParams });
+    const imdbId = await this.getExternalLinks(id);
+    movie.imdb_id = imdbId;
 
-    return this.get({ path, queryParams });
+    return movie;
+  }
+
+  public async getMovieFromDB(movieId: number): Promise<Movie> {
+    try {
+      const movie: Movie = await this.movieRepository.findOneByOrFail({ id: movieId });
+      return movie;
+    } catch (_e) {
+      const apiMovie: Movie = await this.getMovieById(movieId, 'en');
+      const movie: Movie = await this.movieRepository.save(apiMovie);
+      return movie;
+    }
   }
 
   private async getFullDetailedMovies(content: Movie[], language: string): Promise<Movie[]> {

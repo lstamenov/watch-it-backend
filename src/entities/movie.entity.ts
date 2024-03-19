@@ -28,7 +28,7 @@ class Movie extends BaseMedia {
   @Column()
   vote_count: number;
 
-  @Column()
+  @Column({ type: 'decimal' })
   popularity: number;
 }
 
