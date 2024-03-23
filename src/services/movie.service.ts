@@ -44,7 +44,7 @@ class MovieService extends FetchService {
     }
   }
 
-  private async getFullDetailedMovies(content: Movie[], language: string): Promise<Movie[]> {
+  public async getFullDetailedMovies(content: Movie[], language: string): Promise<Movie[]> {
     const fullDetailedMoviesResponse: Promise<Movie[]> = Promise.all(
       content.map((movie) => this.getMovieById(movie.id, language)),
     );
