@@ -60,7 +60,7 @@ class ShowService extends FetchService {
   }
 
   public async getTopRatedShows(language: string): Promise<Show[]> {
-    const path: string = `${this.basePath}/top-rated`;
+    const path: string = `${this.basePath}/top_rated`;
     const queryParams = { language };
     const topRatedShowsResponse = await this.get<ShowsApiReponse>({ path, queryParams });
 
